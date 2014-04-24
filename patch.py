@@ -62,17 +62,17 @@ youtube_re = re.compile(r'youtube\.com')
 
 matchers = [
   (0, lambda x: x['type'] == 'email' and x['note'] is not None,
-    'Membership has email with non-empty note ({match})'),
+    'Membership has email with non-empty note'),
   (0, lambda x: x['type'] != 'email' and x['note'] is None,
-    'Membership has non-email with empty note ({match})'),
+    'Membership has non-email with empty note'),
   (1, lambda x: x['type'] == 'email',
-    'Membership has many emails ({match})'),
+    'Membership has many emails'),
 ]
 
 for type in ('address', 'cell', 'fax', 'voice'):
   for note in ('constituency', 'legislature', 'office', 'residence'):
     matchers.append((1, lambda x, type=type, note=note: x['type'] == type and x['note'] == note,
-      'Membership has contact_details with same type and note ({match})'))
+      'Membership has contact_details with same type and note'))
 
 # A membership should not have notes on emails, should have notes on non-emails,
 # should have at most one email, and should, in most cases, have at most one of
@@ -92,13 +92,13 @@ person_links['items']['properties']['note']['type'] = 'null'
 # should have at most one link per social media website.
 person_links['maxMatchingItems'] = [
   (1, lambda x: not social_re.search(x['url']),
-    'Person has many non-social media links ({match})'),
+    'Person has many non-social media links'),
   (1, lambda x: facebook_re.search(x['url']),
-    'Person has many facebook.com links ({match})'),
+    'Person has many facebook.com links'),
   (1, lambda x: twitter_re.search(x['url']),
-    'Person has many twitter.com links ({match})'),
+    'Person has many twitter.com links'),
   (1, lambda x: youtube_re.search(x['url']),
-    'Person has many youtube.com links ({match})'),
+    'Person has many youtube.com links'),
 ]
 
 membership_schema['properties']['role']['blank'] = False
