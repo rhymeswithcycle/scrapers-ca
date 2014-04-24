@@ -3,10 +3,10 @@ from utils import CanadianJurisdiction
 
 
 class Canada(CanadianJurisdiction):
-  jurisdiction_id = u'ocd-jurisdiction/country:ca/legislature'
+  jurisdiction_id = 'ocd-jurisdiction/country:ca/legislature'
   geographic_code = 1
-  division_name = u'Canada'
-  name = u'Parliament of Canada'
+  division_name = 'Canada'
+  name = 'Parliament of Canada'
   url = 'http://www.parl.gc.ca'
   chambers = {
     'lower': {
@@ -19,11 +19,11 @@ class Canada(CanadianJurisdiction):
     },
   }
   parties = [
-    {'name': u'Bloc Québécois'},
-    {'name': u'Conservative'},
-    {'name': u'Conservative Independent'},
-    {'name': u'Green Party'},
-    {'name': u'Independent'},
-    {'name': u'Liberal'},
-    {'name': u'NDP'},
+    {'name': 'Bloc Québécois'},
+    {'name': 'Conservative'},
+    {'name': 'Conservative Independent'},
+    {'name': 'Green Party'},
+    {'name': 'Independent'},
+    {'name': 'Liberal'},
+    {'name': 'NDP'},
   ]

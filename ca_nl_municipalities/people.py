@@ -4,7 +4,7 @@ from pupa.models import Organization
 from utils import lxmlize, AggregationLegislator as Legislator
 
 import re
-import urllib2
+import urllib.request
 import os
 import subprocess
 
@@ -17,7 +17,7 @@ class NewfoundlandAndLabradorMunicipalitiesPersonScraper(Scraper):
     page = lxmlize(COUNCIL_PAGE)
     url = page.xpath('//a[contains(text(),"Municipal Directory")]/@href')[0]
 
-    response = urllib2.urlopen(url).read()
+    response = urllib.request.urlopen(url).read()
     pdf = open('/tmp/nl.pdf', 'w')
     pdf.write(response)
     pdf.close()

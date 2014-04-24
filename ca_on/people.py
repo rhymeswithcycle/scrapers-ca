@@ -15,7 +15,7 @@ class OntarioPersonScraper(Scraper):
     for row in page.xpath('//div[@id="currentMPPs"]/div[2]/div[2]/table//tr'):
       name_comma, riding = [cell.xpath('string(.)') for cell in row]
       name = ' '.join(name_comma.strip().split(',')[::-1])
-      u_riding = riding.replace('--', u'\u2014')
+      u_riding = riding.replace('--', '\u2014')
       mpp_url = row[0][0].attrib['href']
       mpp_page = lxmlize(mpp_url)
       email = mpp_page.xpath('string(//div[@class="email"])')

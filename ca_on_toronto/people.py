@@ -26,7 +26,7 @@ class TorontoPersonScraper(Scraper):
     info = page.xpath("//div[@class='single-item']")[0]
     name = info.xpath(".//h1")[0].text_content().replace('Councillor', '').strip()
     if name.startswith("Ana Bail"):
-      name = u"Ana Bailão"
+      name = "Ana Bailão"
     district = info.xpath(".//p|.//h3")[0].text_content()
     district = re.sub('\A(Ward \d+).+\Z', '\g<1>', district)
 
@@ -60,7 +60,6 @@ class TorontoPersonScraper(Scraper):
       elif note in ('Constituency Office', 'Constituency Office:', 'Community Office', 'East York Civic Centre Office'):
         note = 'constituency'
       else:
-        print 'Unexpected contact_details.note: %s' % note
         raise Exception('Unexpected contact_details.note: %s' % note)
 
       address_block = True

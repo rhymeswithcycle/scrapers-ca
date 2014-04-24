@@ -22,13 +22,13 @@ class SaintJeromePersonScraper(Scraper):
 
       if 'district' in name:
         continue
-      district = re.findall(ur'no\xa0([0-9]{1,2})', councillor)
+      district = re.findall(r'no\xa0([0-9]{1,2})', councillor)
       if not district:
-        district = re.findall(ur'no ([0-9]{1,2})', councillor)
+        district = re.findall(r'no ([0-9]{1,2})', councillor)
 
       # if theres still no district, it must be the mayor
       if not district:
-        district = u'Saint-Jérôme'
+        district = 'Saint-Jérôme'
         role = 'Maire'
       else:
         district = district[0]

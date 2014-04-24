@@ -4,7 +4,7 @@ from pupa.models import Organization
 from utils import lxmlize, AggregationLegislator as Legislator
 
 import re
-import urllib2
+import urllib.request
 import os
 import subprocess
 
@@ -15,7 +15,7 @@ COUNCIL_PAGE = 'http://www.municipal.gov.sk.ca/Programs-Services/Municipal-Direc
 class SaskatchewanMunicipalitiesPersonScraper(Scraper):
 
   def get_people(self):
-    response = urllib2.urlopen(COUNCIL_PAGE).read()
+    response = urllib.request.urlopen(COUNCIL_PAGE).read()
     pdf = open('/tmp/sk.pdf', 'w')
     pdf.write(response)
     pdf.close()
@@ -86,7 +86,7 @@ class SaskatchewanMunicipalitiesPersonScraper(Scraper):
         p.add_source(COUNCIL_PAGE)
         membership = p.add_membership(org, role=councillor[1], post_id=district_name)
 
-        for key, value in contacts.iteritems():
+        for key, value in contacts.items():
           membership.add_contact_detail(key, value, None if key == 'email' else 'legislature')
         yield p
     os.system('rm /tmp/sk.pdf')

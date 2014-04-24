@@ -3,7 +3,7 @@ from pupa.scrape import Scraper
 
 from utils import lxmlize, CanadianLegislator as Legislator
 
-from urlparse import urljoin
+from urllib.parse import urljoin
 
 import re
 

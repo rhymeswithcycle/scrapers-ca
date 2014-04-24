@@ -2,7 +2,7 @@ from utils import CanadianJurisdiction
 
 
 class SainteAnneDeBellevue(CanadianJurisdiction):
-  jurisdiction_id = u'ocd-jurisdiction/country:ca/csd:2466117/council'
+  jurisdiction_id = 'ocd-jurisdiction/country:ca/csd:2466117/council'
   geographic_code = 2466117
   division_name = 'Sainte-Anne-de-Bellevue'
   name = 'Conseil municipal de Sainte-Anne-de-Bellevue'

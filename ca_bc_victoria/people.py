@@ -4,8 +4,7 @@ from pupa.scrape import Scraper
 from utils import lxmlize, CanadianLegislator as Legislator
 
 import re
-from urllib2 import unquote
-from urlparse import urljoin
+from urllib.parse import urljoin, unquote
 
 COUNCIL_PAGE = 'http://www.victoria.ca/EN/main/city/mayor-council-committees/councillors.html'
 

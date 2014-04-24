@@ -17,7 +17,7 @@ class BrossardPersonScraper(Scraper):
     info = councillors[1].xpath('.//parent::div/text()')
     for num, councillor in enumerate(councillors):
       name = councillor.text_content()
-      if u'Ã©' in name:
+      if 'Ã©' in name:
         name = name.encode('iso-8859-1').decode('utf-8')
       email = councillor.attrib['href'].split(':')[1].split('?')[0]
       district = re.sub(r'(?<=[0-9]).+', '', info.pop(0)).strip()

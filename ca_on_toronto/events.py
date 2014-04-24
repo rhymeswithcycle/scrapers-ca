@@ -167,7 +167,7 @@ def find_items(committee):
       item_links = []
       links = page.xpath('//a[not(contains(@href, "mailto:"))]')
       for link in links:
-        if not 'href' in link.attrib.keys():
+        if not 'href' in list(link.attrib.keys()):
           continue
         description = link.xpath('.//parent::font/preceding-sibling::font/text()')
         if description:
@@ -190,7 +190,7 @@ def find_items(committee):
       agenda_item = {}
       notes = ''
       for decision in decisions:
-        if 'style' in decision.attrib.keys() and 'MARGIN-LEFT: 1in' in decision.attrib['style']:
+        if 'style' in list(decision.attrib.keys()) and 'MARGIN-LEFT: 1in' in decision.attrib['style']:
           note = decision.text_content().strip()
           notes = notes + ' ' + note
         if not decision.text_content().strip() or not re.findall(r'[0-9]\.\W{2,}', decision.text_content()):

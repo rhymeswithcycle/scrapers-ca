@@ -199,7 +199,7 @@ DatetimeValidator.validate_post = validate_post
 
 def validate_compiledPattern(self, x, fieldname, schema, path, pattern=None):
   value = x.get(fieldname)
-  if isinstance(value, basestring):
+  if isinstance(value, str):
     if not pattern.search(value):
       self._error("Value %(value)r for field '%(fieldname)s' does "
                   "not match regular expression '%(pattern)s'",
@@ -210,7 +210,7 @@ DatetimeValidator.validate_compiledPattern = validate_compiledPattern
 
 def validate_negativePattern(self, x, fieldname, schema, path, pattern=None):
   value = x.get(fieldname)
-  if isinstance(value, basestring):
+  if isinstance(value, str):
     if pattern.search(value):
       self._error("Value %(value)r for field '%(fieldname)s' "
                   "matches regular expression '%(pattern)s'",
@@ -221,7 +221,7 @@ DatetimeValidator.validate_negativePattern = validate_negativePattern
 
 def validate_conditionalPattern(self, x, fieldname, schema, path, arguments=None):
   value = x.get(fieldname)
-  if isinstance(value, basestring):
+  if isinstance(value, str):
     for pattern, method in arguments:
       if method(x) and not pattern.search(value):
         self._error("Value %(value)r for field '%(fieldname)s' does "

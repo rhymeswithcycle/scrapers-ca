@@ -3,8 +3,8 @@ from utils import CanadianJurisdiction
 
 
 class Levis(CanadianJurisdiction):
-  jurisdiction_id = u'ocd-jurisdiction/country:ca/csd:2425213/council'
+  jurisdiction_id = 'ocd-jurisdiction/country:ca/csd:2425213/council'
   geographic_code = 2425213
-  division_name = u'Lévis'
-  name = u'Conseil municipal de Lévis'
+  division_name = 'Lévis'
+  name = 'Conseil municipal de Lévis'
   url = 'http://www.ville.levis.qc.ca'

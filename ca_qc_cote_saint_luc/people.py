@@ -52,7 +52,7 @@ class CoteSaintLucPersonScraper(Scraper):
     email = info.xpath('.//a[contains(@href, "mailto:")]/text()')[0]
     phone = info.xpath('//table[1]/tbody/tr/td[1]/p[last()]/text()')[2].replace('Telephone: ', '')
 
-    p = Legislator(name=name, post_id=u'Côte-Saint-Luc', role='Maire')
+    p = Legislator(name=name, post_id='Côte-Saint-Luc', role='Maire')
     p.add_source(COUNCIL_PAGE)
     p.image = info.xpath('.//img/@src')[0]
     p.add_source(url)

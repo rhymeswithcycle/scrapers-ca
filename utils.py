@@ -1,11 +1,9 @@
 # coding: utf-8
-import codecs
-import cStringIO
 import csv
 from ftplib import FTP
 import re
-from StringIO import StringIO
-from urlparse import urlparse
+from io import StringIO
+from urllib.parse import urlparse
 
 import lxml.html
 import requests
@@ -16,95 +14,60 @@ from pupa.models import Membership, Person
 import patch
 
 CONTACT_DETAIL_TYPE_MAP = {
-  u'Address': 'address',
-  u'bb': 'cell',
-  u'bus': 'voice',
-  u'Bus': 'voice',
-  u'Bus.': 'voice',
-  u'Business': 'voice',
-  u'Cell': 'cell',
-  u'Cell Phone': 'cell',
-  u'Email': 'email',
-  u'Fax': 'fax',
-  u'Home': 'voice',
-  u'Home Phone': 'voice',
-  u'Home Phone*': 'voice',
-  u'Office': 'voice',
-  u'ph': 'voice',
-  u'Phone': 'voice',
-  u'Res': 'voice',
-  u'Res/Bus': 'voice',
-  u'Residence': 'voice',
-  u'Téléphone (bureau)': 'voice',
-  u'Téléphone (cellulaire)': 'cell',
-  u'Téléphone (résidence)': 'voice',
-  u'Téléphone (résidence et bureau)': 'voice',
-  u'Voice Mail': 'voice',
-  u'Work': 'voice',
+  'Address': 'address',
+  'bb': 'cell',
+  'bus': 'voice',
+  'Bus': 'voice',
+  'Bus.': 'voice',
+  'Business': 'voice',
+  'Cell': 'cell',
+  'Cell Phone': 'cell',
+  'Email': 'email',
+  'Fax': 'fax',
+  'Home': 'voice',
+  'Home Phone': 'voice',
+  'Home Phone*': 'voice',
+  'Office': 'voice',
+  'ph': 'voice',
+  'Phone': 'voice',
+  'Res': 'voice',
+  'Res/Bus': 'voice',
+  'Residence': 'voice',
+  'Téléphone (bureau)': 'voice',
+  'Téléphone (cellulaire)': 'cell',
+  'Téléphone (résidence)': 'voice',
+  'Téléphone (résidence et bureau)': 'voice',
+  'Voice Mail': 'voice',
+  'Work': 'voice',
 }
 # In Newmarket, for example, there are both "Phone" and "Business" numbers.
 CONTACT_DETAIL_NOTE_MAP = {
-  u'Address': 'legislature',
-  u'bb': 'legislature',
-  u'bus': 'office',
-  u'Bus': 'office',
-  u'Bus.': 'office',
-  u'Business': 'office',
-  u'Cell': 'legislature',
-  u'Cell Phone': 'legislature',
-  u'Email': None,
-  u'Fax': 'legislature',
-  u'Home': 'residence',
-  u'Home Phone': 'residence',
-  u'Home Phone*': 'residence',
-  u'ph': 'legislature',
-  u'Phone': 'legislature',
-  u'Office': 'legislature',
-  u'Res': 'residence',
-  u'Res/Bus': 'office',
-  u'Residence': 'residence',
-  u'Téléphone (bureau)': 'legislature',
-  u'Téléphone (cellulaire)': 'legislature',
-  u'Téléphone (résidence)': 'residence',
-  u'Téléphone (résidence et bureau)': 'legislature',
-  u'Voice Mail': 'legislature',
-  u'Work': 'legislature',
+  'Address': 'legislature',
+  'bb': 'legislature',
+  'bus': 'office',
+  'Bus': 'office',
+  'Bus.': 'office',
+  'Business': 'office',
+  'Cell': 'legislature',
+  'Cell Phone': 'legislature',
+  'Email': None,
+  'Fax': 'legislature',
+  'Home': 'residence',
+  'Home Phone': 'residence',
+  'Home Phone*': 'residence',
+  'ph': 'legislature',
+  'Phone': 'legislature',
+  'Office': 'legislature',
+  'Res': 'residence',
+  'Res/Bus': 'office',
+  'Residence': 'residence',
+  'Téléphone (bureau)': 'legislature',
+  'Téléphone (cellulaire)': 'legislature',
+  'Téléphone (résidence)': 'residence',
+  'Téléphone (résidence et bureau)': 'legislature',
+  'Voice Mail': 'legislature',
+  'Work': 'legislature',
 }
-
-
-class UTF8Recoder:
-
-    """
-    Iterator that reads an encoded stream and reencodes the input to UTF-8
-    """
-
-    def __init__(self, f, encoding):
-        self.reader = codecs.getreader(encoding)(f)
-
-    def __iter__(self):
-        return self
-
-    def next(self):
-        return self.reader.next().encode("utf-8")
-
-
-class UnicodeReader:
-
-    """
-    A CSV reader which will iterate over lines in the CSV file "f",
-    which is encoded in the given encoding.
-    """
-
-    def __init__(self, f, dialect=csv.excel, encoding="utf-8", **kwds):
-        f = UTF8Recoder(f, encoding)
-        self.reader = csv.DictReader(f, dialect=dialect, **kwds)
-
-    def next(self):
-        row = self.reader.next()
-        return {k: unicode(v, "utf-8") for (k, v) in row.iteritems()}
-
-    def __iter__(self):
-        return self
 
 
 class CanadianJurisdiction(Jurisdiction):
@@ -127,7 +90,7 @@ class CanadianJurisdiction(Jurisdiction):
       try:
         __import__(self.__module__ + '.' + scraper_type)
       except ImportError as e:
-        if 'No module named %s' % scraper_type in e.args:
+        if "No module named '%s.%s'" % (self.__module__, scraper_type) in e.args:
           pass
         else:
           raise
@@ -154,7 +117,7 @@ class CanadianLegislator(Legislator):
   def __init__(self, name, post_id, **kwargs):
     super(CanadianLegislator, self).__init__(clean_name(name), clean_string(post_id), **kwargs)
     for k, v in kwargs.items():
-      if isinstance(v, basestring):
+      if isinstance(v, str):
         setattr(self, k, clean_string(v))
 
   def __setattr__(self, name, value):
@@ -204,7 +167,7 @@ class AggregationLegislator(Person):
     super(AggregationLegislator, self).__init__(clean_name(name), **kwargs)
     self.post_id = clean_string(post_id)
     for k, v in kwargs.items():
-      if isinstance(v, basestring):
+      if isinstance(v, str):
         setattr(self, k, clean_string(v))
 
   def __setattr__(self, name, value):
@@ -221,34 +184,34 @@ honorific_prefix_re = re.compile(r'\A(?:Councillor|Dr|Hon|M|Mayor|Mme|Mr|Mrs|Ms|
 honorific_suffix_re = re.compile(r', Ph\.D\Z')
 
 table = {
-  ord(u'​'): u' ',  # zero-width space
-  ord(u'’'): u"'",
-  ord(u'\xc2'): u" ",  # non-breaking space if mixing ISO-8869-1 into UTF-8
+  ord('​'): ' ',  # zero-width space
+  ord('’'): "'",
+  ord('\xc2'): " ",  # non-breaking space if mixing ISO-8869-1 into UTF-8
 }
 
 # @see https://github.com/opencivicdata/ocd-division-ids/blob/master/identifiers/country-ca/ca_provinces_and_territories.csv
 # @see https://github.com/opencivicdata/ocd-division-ids/blob/master/identifiers/country-ca/ca_provinces_and_territories-name_fr.csv
 abbreviations = {
-  u'Newfoundland and Labrador': 'NL',
-  u'Prince Edward Island': 'PE',
-  u'Nova Scotia': 'NS',
-  u'New Brunswick': 'NB',
-  u'Québec': 'QC',
-  u'Ontario': 'ON',
-  u'Manitoba': 'MB',
-  u'Saskatchewan': 'SK',
-  u'Alberta': 'AB',
-  u'British Columbia': 'BC',
-  u'Yukon': 'YT',
-  u'Northwest Territories': 'NT',
-  u'Nunavut': 'NU',
+  'Newfoundland and Labrador': 'NL',
+  'Prince Edward Island': 'PE',
+  'Nova Scotia': 'NS',
+  'New Brunswick': 'NB',
+  'Québec': 'QC',
+  'Ontario': 'ON',
+  'Manitoba': 'MB',
+  'Saskatchewan': 'SK',
+  'Alberta': 'AB',
+  'British Columbia': 'BC',
+  'Yukon': 'YT',
+  'Northwest Territories': 'NT',
+  'Nunavut': 'NU',
 
-  u'PEI': 'PE',
+  'PEI': 'PE',
 }
 
 
 def clean_string(s):
-  return re.sub(r' *\n *', '\n', whitespace_re.sub(' ', unicode(s).translate(table)).strip())
+  return re.sub(r' *\n *', '\n', whitespace_re.sub(' ', s.translate(table)).strip())
 
 
 def clean_name(s):
@@ -286,7 +249,7 @@ def clean_address(s):
 
   # The letter "O" instead of the numeral "0" is a common mistake.
   s = re.sub(r'\b[A-Z][O0-9][A-Z]\s?[O0-9][A-Z][O0-9]\b', lambda x: x.group(0).replace('O', '0'), s)
-  for k, v in abbreviations.iteritems():
+  for k, v in abbreviations.items():
       s = re.sub(r'[,\n ]+\(?' + k + r'\)?(?=(?:[,\n ]+Canada)?(?:[,\n ]+[A-Z][0-9][A-Z]\s?[0-9][A-Z][0-9])?\Z)', ' ' + v, s)
   return re.sub(r'[,\n ]+([A-Z]{2})(?:[,\n ]+Canada)?[,\n ]+([A-Z][0-9][A-Z])\s?([0-9][A-Z][0-9])\Z', r' \1  \2 \3', s)
 
@@ -295,7 +258,7 @@ def lxmlize(url, encoding='utf-8', user_agent=requests.utils.default_user_agent(
   scraper = Scrapelib(follow_robots=False, requests_per_minute=0)
   scraper.user_agent = user_agent
   entry = scraper.urlopen(url)
-  if encoding != 'utf-8' or not isinstance(entry, unicode):
+  if encoding != 'utf-8' or not isinstance(entry, str):
     entry = entry.encode(encoding)
   page = lxml.html.fromstring(entry)
   meta = page.xpath('//meta[@http-equiv="refresh"]')
@@ -313,12 +276,12 @@ def csv_reader(url, header=False, encoding='utf-8', **kwargs):
     data = StringIO()
     ftp = FTP(result.hostname)
     ftp.login(result.username, result.password)
-    ftp.retrbinary('RETR %s' % result.path, lambda block: data.write(block))
+    ftp.retrbinary('RETR %s' % result.path, lambda block: data.write(str(block, encoding=encoding)))
     ftp.quit()
     data.seek(0)
   else:
-    data = StringIO(requests.get(url, **kwargs).content)
+    data = StringIO(str(requests.get(url, **kwargs).content, encoding=encoding))
   if header:
-    return UnicodeReader(data, encoding=encoding)
+    return csv.DictReader(data)
   else:
     return csv.reader(data)

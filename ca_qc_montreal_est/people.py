@@ -20,7 +20,7 @@ class MontrealEstPersonScraper(Scraper):
         continue
       if 'maire' in name:
         name = name.split('maire')[1].strip()
-        district = u'Montréal-Est'
+        district = 'Montréal-Est'
       else:
         district = councillor.xpath('./ancestor::td/following-sibling::td//strong')[-1].text_content()
         district = 'District %d' % re.sub('\D+', '', district)

@@ -78,7 +78,7 @@ def download_files(dest_directory):
     if "Ana Bail" in name:
       name = "Ana Bailao"
 
-    print 'downloading ' + name
+    print('downloading ' + name)
 
     vote_file = open(dest_directory + '/' + name + '.csv', 'w')
     vote_file.write(r.text.encode('utf-8').strip())

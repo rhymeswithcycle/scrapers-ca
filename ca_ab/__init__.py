@@ -3,8 +3,8 @@ from utils import CanadianJurisdiction
 
 
 class Alberta(CanadianJurisdiction):
-  jurisdiction_id = u'ocd-jurisdiction/country:ca/province:ab/legislature'
+  jurisdiction_id = 'ocd-jurisdiction/country:ca/province:ab/legislature'
   geographic_code = 48
-  division_name = u'Alberta'
-  name = u'Legislative Assembly of Alberta'
+  division_name = 'Alberta'
+  name = 'Legislative Assembly of Alberta'
   url = 'https://www.assembly.ab.ca'
