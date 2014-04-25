@@ -1,12 +1,9 @@
 # coding: utf-8
 from pupa.scrape import Scraper
 
-from utils import lxmlize, CanadianLegislator as Legislator
+from utils import csv_reader, CanadianLegislator as Legislator
 
 import re
-
-from urllib.request import urlopen
-from csv import DictReader
 
 COUNCIL_PAGE = 'http://ottawa.ca/en/city-council'
 COUNCIL_CSV_URL = 'http://data.ottawa.ca/en/storage/f/2013-10-29T130227/Elected-Officials-%282010-2014%29-v.3.csv'
@@ -15,9 +12,7 @@ COUNCIL_CSV_URL = 'http://data.ottawa.ca/en/storage/f/2013-10-29T130227/Elected-
 class OttawaPersonScraper(Scraper):
 
   def get_people(self):
-      response = urlopen(COUNCIL_CSV_URL)
-      cr = DictReader(response)
-      for councillor in cr:
+      for councillor in csv_reader(COUNCIL_CSV_URL, header=True):
         name = '%s %s' % (councillor['First name'], councillor['Last name'])
         role = councillor['Elected office']
         if role == 'Mayor':
