@@ -71,19 +71,10 @@ CONTACT_DETAIL_NOTE_MAP = {
 
 
 class CanadianJurisdiction(Jurisdiction):
-  session_details = {
-    'N/A': {
-      '_scraped_name': 'N/A',
-    }
-  }
-  terms = [
-    {
-      'name': 'N/A',
-      'sessions': ['N/A'],
-      'start_year': 1900,
-      'end_year': 2030,
-    }
-  ]
+  sessions = [{
+    'name': 'N/A',
+    '_scraped_name': 'N/A',
+  }]
 
   def __init__(self):
     for scraper_type in ('bills', 'events', 'people', 'speeches', 'votes'):
@@ -97,7 +88,7 @@ class CanadianJurisdiction(Jurisdiction):
       else:
         self.provides.append(scraper_type)
 
-  def get_scraper(self, term, session, scraper_type):
+  def get_scraper(self, session, scraper_type):
     if scraper_type in self.provides:
       class_name = self.__class__.__name__ + {
         'bills': 'Bill',
@@ -211,7 +202,7 @@ abbreviations = {
 
 
 def clean_string(s):
-  return re.sub(r' *\n *', '\n', whitespace_re.sub(' ', s.translate(table)).strip())
+  return re.sub(r' *\n *', '\n', whitespace_re.sub(' ', str(s).translate(table)).strip())
 
 
 def clean_name(s):
@@ -248,7 +239,7 @@ def clean_address(s):
   """
 
   # The letter "O" instead of the numeral "0" is a common mistake.
-  s = re.sub(r'\b[A-Z][O0-9][A-Z]\s?[O0-9][A-Z][O0-9]\b', lambda x: x.group(0).replace('O', '0'), s)
+  s = re.sub(r'\b[A-Z][O0-9][A-Z]\s?[O0-9][A-Z][O0-9]\b', lambda x: x.group(0).replace('O', '0'), str(s))
   for k, v in abbreviations.items():
       s = re.sub(r'[,\n ]+\(?' + k + r'\)?(?=(?:[,\n ]+Canada)?(?:[,\n ]+[A-Z][0-9][A-Z]\s?[0-9][A-Z][0-9])?\Z)', ' ' + v, s)
   return re.sub(r'[,\n ]+([A-Z]{2})(?:[,\n ]+Canada)?[,\n ]+([A-Z][0-9][A-Z])\s?([0-9][A-Z][0-9])\Z', r' \1  \2 \3', s)
