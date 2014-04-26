@@ -240,7 +240,7 @@ def validate_maxMatchingItems(self, x, fieldname, schema, path, arguments=None):
         if method(v):
           count += 1
         if count > length:
-          self._error(message, value, fieldname, match=v)
+          self._error(message, value, fieldname)
 
 DatetimeValidator.validate_maxMatchingItems = validate_maxMatchingItems
 
